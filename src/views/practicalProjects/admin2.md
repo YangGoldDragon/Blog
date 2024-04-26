@@ -139,3 +139,5 @@ npx husky-init
 ```
 pnpm dlx husky-init && pnpm install
 ```
+
+test
