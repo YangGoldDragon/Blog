@@ -506,5 +506,93 @@ createApp(App).use(createPinia()).mount("#app");
 
 <p>Store 定义分为选项式和组合式，在vue3项目中，一般推荐的是使用组合式的方式组织代码，所以这里我们选择组合式，保持项目代码风格统一。</p>
 
-<p>新建文件 src/store/index.ts</p>
+<p>新建文件 src/store/index.ts，创建store。</p>
 
+```typescript
+import type { App } from "vue";
+import { createPinia } from "pinia";
+
+const store = createPinia();
+
+// 全局注册 store
+export function setupStore(app: App<Element>) {
+  app.use(store);
+}
+
+export * from "./app"
+
+export { store };
+```
+
+<p>新建文件 src/store/app.ts，注册了store以后，我们以组合式函数的风格来定义一个store的状态。在 Setup Store 中：</p>
+<p>在 Setup Store 中：</p>
+<ul>
+  <li>ref() 就是 state 属性</li>
+  <li>computed() 就是 getters</li>
+  <li>function() 就是 actions</li>
+</ul>
+
+```typescript
+import { defineStore } from "pinia";
+export const useCounterStore = defineStore("counter", () => {
+    // ref变量 → state 属性
+    const count = ref(0);
+    // computed计算属性 → getters
+    const double = computed(() => {
+        return count.value * 2;
+    });
+    // function函数 → actions
+    function increment() {
+        count.value++;
+    }
+
+    return { count, double, increment };
+});
+```
+
+- 使用store
+
+<p>在父组件src/App.vue，和子组件src\components\HelloWorld.vue中分别引入useCounterStore，并使用。可以发现他们的getters是变化一致的。</p>
+
+<p>父组件：</p>
+
+```typescript
+<script setup lang="ts">
+import { useCounterStore } from "@/store/index"
+const counterStore = useCounterStore();
+</script>
+
+<template>
+  <div class="card">
+    <p>父元素元素：</p>
+    <button type="button" @click="counterStore.increment">actions: increment</button>
+    <p>state: {{ counterStore.count }}</p>
+    <p>getters: {{ counterStore.double }}</p>
+  </div>
+  <HelloWorld msg="Vite + Vue" />
+</template>
+```
+
+<p>子组件：</p>
+
+```typescript
+<script setup lang="ts">
+import variable from "@/styles/variable.module.scss";
+import { useCounterStore } from "@/store/index"
+defineProps<{ msg: string }>();
+const counterStore = useCounterStore();
+</script>
+
+<template>
+  <div class="card">
+    <p>子元素：</p>
+    <button type="button" @click="counterStore.increment">actions: increment</button>
+    <p>state: {{ counterStore.count }}</p>
+    <p>getters: {{ counterStore.double }}</p>
+  </div>
+</template>
+```
+
+<p>上述代码中删除了一些非必要代码，仅保留了一些核心代码，效果如下图：</p>
+
+<img src="../../assets/images/27.png" alt="" style="border: 1px solid gray; display: flex; width: 100%">
