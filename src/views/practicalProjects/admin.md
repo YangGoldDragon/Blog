@@ -1,3 +1,11 @@
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(250)
+</script>
+
+<div v-if="false">{{ count }}</div>
+
 # Vite + Vue3 + Ts 开发后台管理系统
 
 ## 技术栈:
@@ -55,7 +63,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 ![18](../../assets/images/18.png)
 
-- 上面是配置vue文件里面的路径名解析，接下来我们配置一下TS文件的路径解析
+- 上面是配置 vue 文件里面的路径名解析，接下来我们配置一下 TS 文件的路径解析
 
 <p>tsconfig.json中，我们加入下列配置，然后可以发现能正常解析路径映射了</p>
 
@@ -101,12 +109,14 @@ import HelloWorld from '@/components/HelloWorld.vue'
 </table>
 
 开始安装：
+
 ```typescript
 pnpm install -D unplugin-auto-import unplugin-vue-components
 
 ```
 
-- 然后在vite.config.ts配置属性
+- 然后在 vite.config.ts 配置属性
+
 ```typescript
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
@@ -114,7 +124,7 @@ import path from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
-const { resolve } = path
+const { resolve } = path;
 const pathSrc = resolve(__dirname, "src");
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -124,7 +134,7 @@ export default defineConfig({
       // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
       imports: ["vue"],
       eslintrc: {
-        enabled: true, // 是否自动生成 eslint 规则，建议生成之后设置 false 
+        enabled: true, // 是否自动生成 eslint 规则，建议生成之后设置 false
         filepath: "./.eslintrc-auto-import.json", // 指定自动导入函数 eslint 规则的文件
       },
       dts: resolve(pathSrc, "types", "auto-imports.d.ts"), // 指定自动导入函数TS类型声明文件路径
@@ -139,16 +149,14 @@ export default defineConfig({
     },
   },
 });
-
 ```
 
-- 如下图所示，我们删除引入ref和引入组件的代码。发现，项目并没有报错，至此，我们成功的实现了按需自动引入API、组件
+- 如下图所示，我们删除引入 ref 和引入组件的代码。发现，项目并没有报错，至此，我们成功的实现了按需自动引入 API、组件
 
 ![19](../../assets/images/19.png)
 ![20](../../assets/images/20.png)
 
-
-- .eslintrc.cjs - 自动导入函数 eslint 规则引入（稍后在配置eslint的时候配置该选项）
+- .eslintrc.cjs - 自动导入函数 eslint 规则引入（稍后在配置 eslint 的时候配置该选项）
 
 ```typescript
 "extends": [
@@ -156,7 +164,7 @@ export default defineConfig({
 ],
 ```
 
-- tsconfig.json - 自动导入TS类型声明文件引入
+- tsconfig.json - 自动导入 TS 类型声明文件引入
 
 ```typescript
 {
@@ -165,14 +173,15 @@ export default defineConfig({
 ```
 
 ## element plus 按需自动导入
-在unplugin安装以后，我们可以开始按需自动导入element plus了
+
+在 unplugin 安装以后，我们可以开始按需自动导入 element plus 了
 
 ```typescript
 pnpm i element-plus
 ```
 
 - 安装自动导入 Icon 图标，该插件提供多个图标库（https://icon-sets.iconify.design/） 、自动下载图标库、自动导入图标、自动注册图标等功能。
-element-plus 的图标库也被收集在依赖内。
+  element-plus 的图标库也被收集在依赖内。
 
 ```typescript
 pnpm i -D unplugin-icons
@@ -190,8 +199,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 
-
-const { resolve } = path
+const { resolve } = path;
 const pathSrc = resolve(__dirname, "src");
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -201,7 +209,7 @@ export default defineConfig({
       // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
       imports: ["vue"],
       eslintrc: {
-        enabled: true, // 是否自动生成 eslint 规则，建议生成之后设置 false 
+        enabled: true, // 是否自动生成 eslint 规则，建议生成之后设置 false
         filepath: "./.eslintrc-auto-import.json", // 指定自动导入函数 eslint 规则的文件
       },
       dts: resolve(pathSrc, "types", "auto-imports.d.ts"), // 指定自动导入函数TS类型声明文件路径
@@ -220,14 +228,14 @@ export default defineConfig({
         ElementPlusResolver(),
         // 自动注册图标组件
         IconsResolver({
-          enabledCollections: ["ep"] // element-plus图标库，其他图标库 https://icon-sets.iconify.design/
+          enabledCollections: ["ep"], // element-plus图标库，其他图标库 https://icon-sets.iconify.design/
         }),
       ],
     }),
     Icons({
       // 自动安装图标库
       autoInstall: true,
-    })
+    }),
   ],
   resolve: {
     alias: {
@@ -237,7 +245,7 @@ export default defineConfig({
 });
 ```
 
-- 添加element组件及icon
+- 添加 element 组件及 icon
 
 ```html
 <!-- src/components/HelloWorld.vue -->
@@ -250,13 +258,13 @@ export default defineConfig({
 ```
 
 - 预览效果
-![21](../../assets/images/21.png)
+  ![21](../../assets/images/21.png)
 
-## vite-plugin-svg-icons 生产SVG雪碧图
+## vite-plugin-svg-icons 生产 SVG 雪碧图
 
 - 相关文档：[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons/blob/main/README.zh_CN.md)
 
-- 安装vite-plugin-svg-icons
+- 安装 vite-plugin-svg-icons
 
 ```typescript
 pnpm i -D vite-plugin-svg-icons
@@ -268,7 +276,7 @@ pnpm i -D vite-plugin-svg-icons
 
 ```typescript
 // src/main.ts
-import 'virtual:svg-icons-register';
+import "virtual:svg-icons-register";
 ```
 
 - vite.config.ts 配置插件
@@ -284,9 +292,8 @@ export default defineConfig({
       // 指定symbolId格式
       symbolId: "icon-[dir]-[name]", // dir是以iconDirs作为根目录，下面的子目录。name是文件名
     }),
-  ]
+  ],
 });
-
 ```
 
 - SvgIcon 组件封装
@@ -344,7 +351,7 @@ const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`);
 <!-- src/components/HelloWorld.vue -->
 <template>
   <div style="margin-top: 20px; background-color: bisque;">
-    <svg-icon icon-class="doge" size="5em"/>
+    <svg-icon icon-class="doge" size="5em" />
     <div>SVG 本地图标</div>
   </div>
 </template>
@@ -352,7 +359,7 @@ const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`);
 
 ![22](../../assets/images/22.png)
 
-## scss安装
+## scss 安装
 
 ```typescript
 pnpm i -D sass
@@ -401,12 +408,12 @@ css: {
 
 ```scss
 // 导出 variable.scss 文件的变量
-:export{
-    $bgColor: $bgColor
+:export {
+  $bgColor: $bgColor;
 }
 ```
 
-- 然后在typeScript里面，引入该变量并且使用，如下图
+- 然后在 typeScript 里面，引入该变量并且使用，如下图
 
 ```typescript
 <script setup lang="ts">
@@ -420,13 +427,14 @@ import variable from "@/styles/variable.module.scss";
   </div>
 </template>
 ```
+
 ![23](../../assets/images/23.png)
 
-## unocss安装
+## unocss 安装
 
 <p>即时按需原子 CSS 引擎</p>
 
-- 安装UnoCSS
+- 安装 UnoCSS
 
 ```typescript
 pnpm i -D unocss
@@ -436,42 +444,39 @@ pnpm i -D unocss
 
 ```typescript
 // vite.config.ts
-import UnoCSS from 'unocss/vite'
-import { defineConfig } from 'vite'
+import UnoCSS from "unocss/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [
-    UnoCSS(),
-  ],
-})
+  plugins: [UnoCSS()],
+});
 ```
 
 - 根目录创建 uno.config.ts 文件
 
 ```typescript
 //uno.config.ts
-import { defineConfig } from 'unocss'
+import { defineConfig } from "unocss";
 export default defineConfig({
   // ...UnoCSS options 具体配置可以查看unocss官网文档
   rules: [
-    ['blue', { color: 'blue' }],
-    ['ft20', { 'font-size': '20px' }],
+    ["blue", { color: "blue" }],
+    ["ft20", { "font-size": "20px" }],
   ],
   shortcuts: {
-    'ft20-blue': 'blue ft20'
-  }
-})
+    "ft20-blue": "blue ft20",
+  },
+});
 ```
 
-- 入口文件main.ts中引入UnoCSS样式文件
+- 入口文件 main.ts 中引入 UnoCSS 样式文件
 
 ```typescript
 // main.ts
-import 'virtual:uno.css'
+import "virtual:uno.css";
 ```
 
 - VSCode 安装 UnoCSS 插件，然后可以写一点测试代码，比如改变字体颜色，效果如下图所示：
-
 
 ```vue
 // src/components/HelloWorld.vue
@@ -481,9 +486,9 @@ import 'virtual:uno.css'
 </template>
 ```
 
-<img src="../../assets/images/24.png" alt="" style="border: 1px solid gray; display: flex; width: 100%">
+<img src="../../assets/images/24.png" alt="">
 
-## pinia安装
+## pinia 安装
 
 <p>Pinia 是 Vue 的专属状态管理库，它允许你跨组件或页面共享状态。可以理解成一个中心数据状态仓库。</p>
 - 安装Pinia
@@ -502,7 +507,7 @@ import App from "./App.vue";
 createApp(App).use(createPinia()).mount("#app");
 ```
 
-- 定义store
+- 定义 store
 
 <p>Store 定义分为选项式和组合式，在vue3项目中，一般推荐的是使用组合式的方式组织代码，所以这里我们选择组合式，保持项目代码风格统一。</p>
 
@@ -519,7 +524,7 @@ export function setupStore(app: App<Element>) {
   app.use(store);
 }
 
-export * from "./app"
+export * from "./app";
 
 export { store };
 ```
@@ -535,22 +540,22 @@ export { store };
 ```typescript
 import { defineStore } from "pinia";
 export const useCounterStore = defineStore("counter", () => {
-    // ref变量 → state 属性
-    const count = ref(0);
-    // computed计算属性 → getters
-    const double = computed(() => {
-        return count.value * 2;
-    });
-    // function函数 → actions
-    function increment() {
-        count.value++;
-    }
+  // ref变量 → state 属性
+  const count = ref(0);
+  // computed计算属性 → getters
+  const double = computed(() => {
+    return count.value * 2;
+  });
+  // function函数 → actions
+  function increment() {
+    count.value++;
+  }
 
-    return { count, double, increment };
+  return { count, double, increment };
 });
 ```
 
-- 使用store
+- 使用 store
 
 <p>在父组件src/App.vue，和子组件src\components\HelloWorld.vue中分别引入useCounterStore，并使用。可以发现他们的getters是变化一致的。</p>
 
@@ -595,4 +600,94 @@ const counterStore = useCounterStore();
 
 <p>上述代码中删除了一些非必要代码，仅保留了一些核心代码，效果如下图：</p>
 
-<img src="../../assets/images/27.png" alt="" style="border: 1px solid gray; display: flex; width: 100%">
+<img src="../../assets/images/27.png" alt="">
+
+## 环境变量配置
+
+- 环境变量配置
+
+<p>与webpack项目类型，在根目录新建 .env.development 、.env.production等文件配置开发、测试、生产等环境变量，具体详情可查看[vite环境变量](https://cn.vitejs.dev/guide/env-and-mode)</p>
+<p>这里，我们只配置两个环境，开发、生产作为演示。</p>
+
+<p>开发环境变量配置（.env.development）</p>
+
+```typescript
+# 变量必须以 VITE_ 为前缀才能暴露给外部读取
+VITE_APP_TITLE = 'vue3-element-admin'
+VITE_APP_PORT = 3000
+VITE_APP_BASE_API = '/dev-api'
+```
+
+<p>生产环境变量配置（.env.development）</p>
+
+```typescript
+VITE_APP_TITLE = "vite-vue3-ts-admin";
+VITE_APP_PORT = 4000;
+VITE_APP_BASE_API = "/prod-api";
+```
+
+- 环境变量智能提示
+
+<p>新建 src/types/env.d.ts文件，存放环境变量TS类型声明</p>
+
+```typescript
+// src/types/env.d.ts
+interface ImportMetaEnv {
+  /**
+   * 应用标题
+   */
+  VITE_APP_TITLE: string;
+  /**
+   * 应用端口
+   */
+  VITE_APP_PORT: number;
+  /**
+   * API基础路径(反向代理)
+   */
+  VITE_APP_BASE_API: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+<p>然乎我们在App.vue里面打印一个环境变量，可以看到智能提示。</p>
+
+<img src="../../assets/images/28.png" alt="">
+
+## 反向代理跨域
+
+<p>浏览器同源策略: 协议、域名和端口都相同是同源，浏览器会限制非同源请求读取响应结果。</p>
+<p>我们在开发环境中，通过proxy设置跨域，vite会在本地启动一个node服务，中转请求，从而避免浏览器的同源策略。因为服务端请求服务端是没有浏览器的同源限制的。</p>
+<p>在vite.config.ts文件中配置代理</p>
+
+```typescript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://www.path2.com',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '/api/v1/'),
+    },
+  }
+}
+```
+
+<p>配置以后，地址会进行重写转化：</p>
+<p class="flex"><strong class="w120">请求地址：</strong><span>http://www.path1.com/api/getList/api/</span></p>
+<p class="flex"><strong class="w120">转后后的地址：</strong><span>http://www.path2.com/getList/api/v1/</span></p>
+
+## Axios安装
+
+<style lang="scss" scoped>
+@import "@/assets/styles/common.scss";
+
+img {
+  border: 1px solid gray; 
+  display: flex; 
+  width: 100%;
+}
+
+
+</style>

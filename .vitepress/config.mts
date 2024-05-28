@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import viteConfig from '../vite.config.mts';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -28,5 +29,6 @@ export default defineConfig({
   },
   rewrites: {
     'views/practicalProjects/admin.md': 'practicalProjects/admin.md',
-  }
+  },
+  vite: viteConfig
 })
