@@ -81,7 +81,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 ![25](../../assets/images/25.png)
 
-## unplugin 自动导入
+## Unplugin 自动导入
 
 - 现在主流项目中都是提倡按需导入，优点是可以减少无用资源引入，避免资源重复引入。缺点是每次按需引入时，需要手动引入。
   所以这里我们使用 unplugin 自动导入，解放双手。
@@ -172,7 +172,7 @@ export default defineConfig({
 }
 ```
 
-## element plus 按需自动导入
+## Element Plus 按需自动导入
 
 在 unplugin 安装以后，我们可以开始按需自动导入 element plus 了
 
@@ -359,7 +359,7 @@ const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`);
 
 ![22](../../assets/images/22.png)
 
-## scss 安装
+## Scss 安装
 
 ```typescript
 pnpm i -D sass
@@ -430,7 +430,7 @@ import variable from "@/styles/variable.module.scss";
 
 ![23](../../assets/images/23.png)
 
-## unocss 安装
+## Unocss 安装
 
 <p>即时按需原子 CSS 引擎</p>
 
@@ -488,7 +488,7 @@ import "virtual:uno.css";
 
 <img src="../../assets/images/24.png" alt="">
 
-## pinia 安装
+## Pinia 安装
 
 <p>Pinia 是 Vue 的专属状态管理库，它允许你跨组件或页面共享状态。可以理解成一个中心数据状态仓库。</p>
 - 安装Pinia
@@ -678,7 +678,101 @@ server: {
 <p class="flex"><strong class="w120">请求地址：</strong><span>http://www.path1.com/api/getList/api/</span></p>
 <p class="flex"><strong class="w120">转后后的地址：</strong><span>http://www.path2.com/getList/api/v1/</span></p>
 
-## Axios安装
+## Axios 安装
+
+<p>安装依赖</p>
+
+```typescript
+pnpm i axios
+```
+
+<p>新建src/utils/request.ts，阅读<a href="https://axios-http.com/zh/docs/intro">axios官网文档</a>，写入以下配置</p>
+
+```typescript
+//InternalAxiosRequestConfig是axios的内部API
+import axios, { InternalAxiosRequestConfig, AxiosResponse } from "axios";
+
+// 创建 axios 实例
+const service = axios.create({
+  baseURL: import.meta.env.VITE_APP_BASE_API,
+  timeout: 60000,
+  headers: { "Content-Type": "application/json;charset=utf-8" },
+});
+
+// 请求拦截器
+service.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    config.headers.Authorization = "token";
+    return config;
+  },
+  (error: any) => {
+    return Promise.reject(error);
+  }
+);
+
+// 响应拦截器
+service.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
+    if (
+      response.config.responseType === "blob" ||
+      response.config.responseType === "arraybuffer"
+    ) {
+      return response;
+    }
+
+    const { code, data, msg } = response.data;
+    if (code >= 200 && code < 300) {
+      return data;
+    }
+
+    console.log(msg || "系统出错");
+    return Promise.reject(new Error(msg || "Error"));
+  },
+  (error: any) => {
+    // 异常处理
+    if (error.response.data) {
+      const { code, msg } = error.response.data;
+      if (code >= 500) {
+        console.log(msg || "系统出错");
+      }
+    }
+    return Promise.reject(error.message);
+  }
+);
+
+// 导出 axios 实例
+export default service;
+
+```
+
+<p>新建src/api/common.ts，调用API</p>
+
+```ts
+// src/api/common.ts
+import request from "@/utils/request";
+
+// 登录
+export function login(data) {
+  return request({
+    url: "/api/user/login",
+    method: "post",
+    data,
+  });
+}
+```
+
+## Vue Router 安装
+
+<p>Vue Router 是 Vue.js 的官方路由。它与 Vue.js 核心深度集成。详细功能可查看<a href="https://router.vuejs.org/zh/introduction.html">官方文档</a></p>
+
+<p>安装依赖</p>
+
+```ts
+pnpm add vue-router@4
+```
+
+
 
 <style lang="scss" scoped>
 @import "@/assets/styles/common.scss";
