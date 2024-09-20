@@ -743,10 +743,11 @@ service.interceptors.response.use(
 
 // 导出 axios 实例
 export default service;
-
 ```
 
+
 <p>新建src/api/common.ts，调用API</p>
+
 
 ```ts
 // src/api/common.ts
@@ -766,11 +767,201 @@ export function login(data) {
 
 <p>Vue Router 是 Vue.js 的官方路由。它与 Vue.js 核心深度集成。详细功能可查看<a href="https://router.vuejs.org/zh/introduction.html">官方文档</a></p>
 
-<p>安装依赖</p>
+- 安装依赖
 
 ```ts
 pnpm add vue-router@4
 ```
+
+- 新建src\router\index.ts，然后写好配置文件，如下：
+
+```ts
+import type { App } from "vue";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+
+// 静态路由
+export const constantRoutes: RouteRecordRaw[] = [
+  {
+    path: "/",
+    name: "/",
+    component: () => import("@/views/home/index.vue"),
+  },
+  {
+    path: "/login",
+    component: () => import("@/views/home/login.vue"),
+    // meta: { hidden: true },
+  },
+  {
+    path: "/list",
+    component: () => import("@/views/list/index.vue"),
+    // meta: { hidden: true },
+    children: [
+      {
+        path: "",
+        component: () => import("@/views/list/list.vue")
+      },
+      {
+        path: "children",
+        component: () => import("@/views/list/children.vue")
+      }
+    ],
+  },
+];
+
+/**
+ * 创建路由
+ */
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: constantRoutes,
+  // 刷新时，滚动条位置还原
+  scrollBehavior: () => ({ left: 0, top: 0 }),
+});
+
+// 全局注册 router
+export function setupRouter(app: App<Element>) {
+  app.use(router);
+}
+
+/**
+ * 重置路由
+ */
+export function resetRouter() {
+  router.replace({ path: "/login" });
+}
+
+export default router;
+```
+
+
+- 然后我们在src\main.ts中，引入并注册使用
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { setupRouter } from "@/router/index";
+
+const app = createApp(App)
+setupRouter(app)
+app.mount('#app')
+```
+
+<p>需要注意的是，其中的嵌套路由，比如/list，需要在入口处有一个router-view组件用来渲染嵌套组件，相当于是一个占位符一样。</p>
+<p>另外，让我们想要使用简短的url路径，比如：https://www.xxx.com/list，而我们对应的组件路径是在src\views\list\list.vue，我们可以在路由配置中，将
+子路由的路径填写成''（空字符串），这样相当于，一级url路径对应的是二级的组件路径。如果嵌套的更深入，我们还可以使用redirect重定义路由路径，以映射深层次的组件路径</p>
+<p>组件路径：</p>
+<img src="../../assets/images/28.png" alt="">
+
+<p>使用，首先我们在src\views\home\index.vue，写入下列内容，用法基本与vue2类似，可以看到我们使用了一个useRouter，却没有引入，这是因为我们在vite中配置了全局引入，配置见下方二，vite替我们自动引入了router相关API。</p>
+
+<p>src\views\home\index.vue</p>
+
+```ts
+<script setup lang="ts">
+const router = useRouter();
+
+function toLogin(){
+  router.push(`/login`);
+}
+function toList(){
+  router.push(`/list`);
+}
+function toListChildren(){
+  router.push(`/list/children`);
+}
+
+</script>
+
+<template>
+  <ul>
+    <li @click="toLogin">登录页</li>
+    <li @click="toList">列表页</li>
+    <li @click="toListChildren">列表页二級</li>
+  </ul>
+</template>
+
+<style scoped>
+ul{
+  display: inline-block;
+  width: 100%;
+}
+li{
+  padding: 5px 10px;
+  background-color: rgb(177, 177, 209);
+  margin: 20px 0;
+  cursor: pointer;
+  &:hover{
+    background-color: rgb(26, 26, 87);
+    color: white;
+  }
+}
+</style>
+```
+
+<p>vite.config.ts</p>
+
+```ts
+export default defineConfig({
+  plugins: [
+    vue(),
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      imports: ["vue", 'vue-router'],
+```
+
+- 除了路由跳转以外，我们还可以使用route，查看路由的一些相关属性。新建src\views\list\list.vue，组件里面遍历展示route相关属性，如下图。
+
+<p>src\views\list\list.vue</p>
+
+```ts
+<script setup lang="ts">
+const route = useRoute();
+import type { RouteLocationNormalizedLoaded } from 'vue-router';
+
+const formatRoute = ref(Object.keys(route).map(key => {
+  return {
+    key,
+    value: route[key as keyof RouteLocationNormalizedLoaded] ?? ""
+  }
+}))
+</script>
+
+<template>
+  <div class="home">列表页</div>
+  <div class="routeTitle">路由API:</div>
+  <div v-for="(item, index) of formatRoute" :key="index" class="routeList">
+    <div>key: {{item.key}}</div>
+    <div>value: {{item.value}}</div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.home {
+  font-size: 32px;
+  font-weight: bold;
+  color: red;
+}
+
+.routeTitle{
+  display: flex;
+  width: 500px;
+  justify-content: flex-start;
+}
+
+.routeList{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 500px;
+  margin-top: 5px;
+}
+</style>
+```
+
+<p class="fw">route属性</p>
+
+<img src="../../assets/images/30.png" alt="">
 
 
 
@@ -782,6 +973,4 @@ img {
   display: flex; 
   width: 100%;
 }
-
-
 </style>
