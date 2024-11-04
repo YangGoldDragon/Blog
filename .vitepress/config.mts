@@ -16,9 +16,15 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: '实战项目',
+        text: '基础知识',
         items: [
-          { text: 'Vite + Vue3 + Ts 开发后台管理系统', link: '/practicalProjects/admin' },
+          { text: 'Typescript', link: '/basicKnowledge/typescript' },
+        ]
+      },
+      {
+        // text: '实战项目',  //TEST
+        items: [
+          // { text: 'Vite + Vue3 + ElementUI + Typescript开发后台管理系统', link: '/practicalProjects/admin' },
         ]
       }
     ],
@@ -29,6 +35,7 @@ export default defineConfig({
   },
   rewrites: {
     'views/practicalProjects/admin.md': 'practicalProjects/admin.md',
+    'views/basicKnowledge/typescript.md': 'basicKnowledge/typescript.md',
   },
   vite: viteConfig
 })

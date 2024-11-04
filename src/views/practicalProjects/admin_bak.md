@@ -6,7 +6,7 @@ const count = ref(250)
 
 <div v-if="false">{{ count }}</div>
 
-# Vite + Vue3 + ElementUI + Typescript 开发后台管理系统
+# Vite + Vue3 + Ts 开发后台管理系统
 
 ## 技术栈:
 
@@ -430,29 +430,6 @@ import variable from "@/styles/variable.module.scss";
 
 ![23](../../assets/images/23.png)
 
-- 重置标准样式
-
-<p>这里使用了reset.css，重置常用标签的属性，然后将上方的variable.scc也一并引入index.scss。</p>
-
-```ts
-export default defineConfig({
-  css: {
-    // CSS 预处理器
-    preprocessorOptions: {
-      //define global scss variable
-      scss: {
-        javascriptEnabled: true,
-        additionalData: `@use "@/styles/index.scss" as *;`,
-      },
-    },
-  }
-})
-
-```
-
-![36](../../assets/images/36.png)
-
-
 ## Unocss 安装
 
 <p>即时按需原子 CSS 引擎</p>
@@ -768,7 +745,9 @@ service.interceptors.response.use(
 export default service;
 ```
 
+
 <p>新建src/api/common.ts，调用API</p>
+
 
 ```ts
 // src/api/common.ts
@@ -794,7 +773,7 @@ export function login(data) {
 pnpm add vue-router@4
 ```
 
-- 新建 src\router\index.ts，然后写好配置文件，如下：
+- 新建src\router\index.ts，然后写好配置文件，如下：
 
 ```ts
 import type { App } from "vue";
@@ -819,12 +798,12 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        component: () => import("@/views/list/list.vue"),
+        component: () => import("@/views/list/list.vue")
       },
       {
         path: "children",
-        component: () => import("@/views/list/children.vue"),
-      },
+        component: () => import("@/views/list/children.vue")
+      }
     ],
   },
 ];
@@ -854,16 +833,17 @@ export function resetRouter() {
 export default router;
 ```
 
-- 然后我们在 src\main.ts 中，引入并注册使用
+
+- 然后我们在src\main.ts中，引入并注册使用
 
 ```ts
-import { createApp } from "vue";
-import App from "./App.vue";
+import { createApp } from 'vue'
+import App from './App.vue'
 import { setupRouter } from "@/router/index";
 
-const app = createApp(App);
-setupRouter(app);
-app.mount("#app");
+const app = createApp(App)
+setupRouter(app)
+app.mount('#app')
 ```
 
 <p>需要注意的是，其中的嵌套路由，比如/list，需要在入口处有一个router-view组件用来渲染嵌套组件，相当于是一个占位符一样。</p>
@@ -929,7 +909,7 @@ export default defineConfig({
       imports: ["vue", 'vue-router'],
 ```
 
-- 除了路由跳转以外，我们还可以使用 route，查看路由的一些相关属性。新建 src\views\list\list.vue，组件里面遍历展示 route 相关属性，如下图。
+- 除了路由跳转以外，我们还可以使用route，查看路由的一些相关属性。新建src\views\list\list.vue，组件里面遍历展示route相关属性，如下图。
 
 <p>src\views\list\list.vue</p>
 
@@ -983,124 +963,14 @@ const formatRoute = ref(Object.keys(route).map(key => {
 
 <img src="../../assets/images/30.png" alt="">
 
-## 代码规范-EditorConfig
-
-<p>EditorConfig 可帮助多个开发人员在不同的编辑器和 IDE 上维护同一个项目的一致编码风格 <a href="https://editorconfig.org/">官方文档</a></p>
-
-- 根目录新建.editorconfig 文件，配置属性上 github COPY 一份，然后安装插件。
-
-<p class="fw">新建.editorconfig文件</p>
-
-<img src="../../assets/images/31.png" alt="">
-
-<p class="fw">配置属性</p>
-
-```ts
-#editorconfig.org
-#url: https://github.com/editorconfig/editorconfig/blob/master/.editorconfig
-root = true
-
-[*]
-indent_style = space
-indent_size = 2
-end_of_line = lf
-charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.md]
-trim_trailing_whitespace = false
-```
-
-<p class="fw">安装editorconfig插件</p>
-
-<img src="../../assets/images/32.png" alt="">
-
-## 代码规范-Prettier
-
-<p>Prettier 是一款功能强大的代码格式化程序，支持JS/TS/VUE/JSON等等文件。 <a href="https://prettier.io/docs/en">官方文档</a></p>
-
-- 安装 Prettier
-
-```ts
-pnpm add prettier -D
-```
-
-- 配置.prettierrc.json 文件，这里使用的是官方默认的基础配置，具体属性意义可以配合 GPT 和官网查询了解。
-
-```ts
-{
-  "trailingComma": "es5",
-  "tabWidth": 4,
-  "semi": false,
-  "singleQuote": true
-}
-```
-
-- 配置.prettierignore 文件，忽略一些不需要格式化的文件，比如 node_modules、.git 之类的。
-
-```ts
-/dist/*
-/public/*
-**/node_modules
-**/.git
-**/.svn
-**/*.svg
-**/*.sh
-```
-
-- 安装 prettier 插件，使 vscode 可以使用 prettier 的相关功能，比如保存时，自动使用 prettier 的格式化功能
-
-<p>prefrences => setting => 搜索 format on save => 勾选 Editor: Format On Save</p>
-<p>prefrences => setting => 搜索 format on save => Editor: Default Formatter => 选择Prettier - Code fommatter </p>
-
-<img src="../../assets/images/34.png" alt="">
-
-## 代码规范-Eslint
-
-<p>Eslint 可以帮助你发现并修复 JavaScript 代码中的问题 <a href="https://eslint.org/">官方文档</a></p>
-
-- 安装 Eslint
-
-<p>同样也需要安装 npm 包，但是使用 vite 创建项目时，只要选择了 eslint 是会自动帮我们安装的，同 prettier 一样，也需要安装 vscode 相关插件</p>
-
-```ts
-pnpm create @eslint/config@latest
-```
-
-<img src="../../assets/images/35.png" alt="">
-
-- 解决Eslint 和 Prettier 的冲突
-
-<p>为了解决这两种插件的代码规范冲突，需要安装额外的插件。但是在eslint@^8.0.0及其之后，不再需要安装这些插件了。eslint已经帮我们解决了这种冲突问题了，我们只需要在eslint.config.js增加配置就好了</p>
-
-```ts
-// eslint.config.js
-export default [
-  {
-    extends: [
-        // 其他扩展
-        'plugin:prettier/recommended', //该配置相当于
-    ],
-  },
-]
-```
-
-- settings.json 添加一些格式化配置属性
-
-```ts
-//.vscode\settings.json
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode", //使用 prettier 作为默认格式化工具
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit" // 手动进行代码格式化之后执行的代码操作，使用eslint修复代码，eslint的配置中又包括了eslint的规范和pretteir的规范。
-  },
-  "editor.formatOnSave": "explicit" // 手动进行代码保存时自动格式化
-}
-```
-
 
 
 <style lang="scss" scoped>
 @import "@/assets/styles/common.scss";
+
+img {
+  border: 1px solid gray; 
+  display: flex; 
+  width: 100%;
+}
 </style>
