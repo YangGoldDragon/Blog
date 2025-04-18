@@ -918,6 +918,20 @@ li{
 </style>
 ```
 
+<p class="mt50 fwb">404路由</p>
+
+<p>当用户输入一些不匹配的路由，我们可以给他跳转到404页面，使用了vue-router里面的动态路由匹配。</p>
+
+```ts
+// 静态路由
+export const constantRoutes: RouteRecordRaw[] = [
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/error/notFound.vue'),
+  }
+]  
+```
+
 <p>vite.config.ts</p>
 
 ```ts
@@ -979,7 +993,7 @@ const formatRoute = ref(Object.keys(route).map(key => {
 </style>
 ```
 
-<p class="fw">route属性</p>
+<p class="fwb">route属性</p>
 
 <img src="../../assets/images/30.png" alt="">
 
@@ -989,11 +1003,11 @@ const formatRoute = ref(Object.keys(route).map(key => {
 
 - 根目录新建.editorconfig 文件，配置属性上 github COPY 一份，然后安装插件。
 
-<p class="fw">新建.editorconfig文件</p>
+<p class="fwb">新建.editorconfig文件</p>
 
 <img src="../../assets/images/31.png" alt="">
 
-<p class="fw">配置属性</p>
+<p class="fwb">配置属性</p>
 
 ```ts
 #editorconfig.org
@@ -1012,7 +1026,7 @@ insert_final_newline = true
 trim_trailing_whitespace = false
 ```
 
-<p class="fw">安装editorconfig插件</p>
+<p class="fwb">安装editorconfig插件</p>
 
 <img src="../../assets/images/32.png" alt="">
 
@@ -1080,7 +1094,7 @@ export default [
   {
     extends: [
         // 其他扩展
-        'plugin:prettier/recommended', //该配置相当于
+        'plugin:prettier/recommended', //该配置会自动禁用这些冲突规则，避免出现 ESLint 和 Prettier 同时对格式问题报错的情况。
     ],
   },
 ]
@@ -1099,7 +1113,115 @@ export default [
 }
 ```
 
+## 代码规范-Stylelint
 
+<p>Stylelint 是一种 CSS 检查器，可以帮助您避免错误并强制执行约定，有点类似于 JS 中的 Eslint，他不做代码格式化，只针对代码规范。 <a href="https://stylelint.io/">官方文档</a></p>
+
+- 安装 Stylelint
+
+<p>我们先安装 vscode 相关插件，然后安装相关 npm 包</p>
+
+```ts
+pnpm install -D stylelint stylelint-config-standard stylelint-config-recommended-scss stylelint-config-recommended-vue postcss postcss-html postcss-scss stylelint-config-recess-order stylelint-config-html
+```
+
+<img src="../../assets/images/37.png" alt="">
+
+| 依赖                             | 说明                                                                 | 备注                                                                 |
+|----------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------|
+| `stylelint`                      | stylelint 核心库                                                     | [stylelint](https://stylelint.io)                                   |
+| `stylelint-config-standard`      | Stylelint 标准共享配置                                               | [stylelint-config-standard 文档](https://github.com/stylelint/stylelint-config-standard) |
+| `stylelint-config-recommended-scss` | 扩展 stylelint-config-recommended 共享配置并为 SCSS 配置其规则       | [stylelint-config-recommended-scss 文档](https://github.com/stylelint-scss/stylelint-config-recommended-scss) |
+| `stylelint-config-recommended-vue`  | 扩展 stylelint-config-recommended 共享配置并为 Vue 配置其规则        | [stylelint-config-recommended-vue 文档](https://github.com/ota-meshi/stylelint-config-recommended-vue) |
+| `stylelint-config-recess-order` | 提供优化的样式顺序的配置                                             | [CSS 书写顺序规范](https://github.com/stormwarning/stylelint-config-recess-order) |
+| `stylelint-config-html`         | 共享 HTML（类似 HTML）配置，捆绑 postcss-html 并对其进行配置         | [stylelint-config-html 文档](https://github.com/ota-meshi/stylelint-config-html) |
+| `postcss-html`                  | 解析 HTML（类似 HTML）的 PostCSS 语法                                | [postcss-html 文档](https://github.com/ota-meshi/postcss-html)     |
+| `postcss-scss`                  | PostCSS 的 SCSS 解析器，支持 CSS 行类注释                            | [postcss-scss 文档](https://github.com/postcss/postcss-scss)       |
+| `stylelint-prettier`            | 统一代码风格，格式冲突时以 Prettier 规则为准                          | [stylelint-prettier 文档](https://github.com/prettier/stylelint-prettier)
+<p>根目录新建 .stylelintrc.cjs 文件，配置如下：</p>
+
+```ts
+module.exports = {
+  extends: [
+    "stylelint-config-recommended",
+    "stylelint-config-recommended-scss",
+    "stylelint-config-recommended-vue/scss",
+    "stylelint-config-html/vue",
+    "stylelint-config-recess-order",
+  ],
+
+  plugins: [
+    "stylelint-prettier", // 统一代码风格，格式冲突时以 Prettier 规则为准
+  ],
+  overrides: [
+    {
+      files: ["**/*.{vue,html}"],
+      customSyntax: "postcss-html",
+    },
+    {
+      files: ["**/*.{css,scss}"],
+      customSyntax: "postcss-scss",
+    },
+  ],
+  rules: {
+    "prettier/prettier": true, // 强制执行 Prettier 格式化规则（需配合 .prettierrc 配置文件）
+    "no-empty-source": null, //  允许空的样式文件
+    "declaration-property-value-no-unknown": null, // 允许非常规数值格式 ,如 height: calc(100% - 50)
+    // 允许使用未知伪类
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        ignorePseudoClasses: ["global", "export", "deep"],
+      },
+    ],
+    // 允许使用未知伪元素
+    "at-rule-no-unknown": null, // 禁用默认的未知 at-rule 检查
+    "scss/at-rule-no-unknown": true, // 启用 SCSS 特定的 at-rule 检查
+  },
+};
+```
+
+<p>根目录新建 .stylelintignore 文件，配置如下：</p>
+
+```ts
+dist
+node_modules
+public
+.husky
+.vscode
+.idea
+*.sh
+*.md
+src/assets
+```
+
+- 使用 Stylelint
+
+<p>package.json 添加 stylelint 检测指令：</p>
+
+```ts
+"scripts": {
+    "lint:stylelint": "stylelint  \"**/*.{css,scss,vue,html}\" --fix"
+}
+```
+
+```ts
+pnpm run lint:stylelint
+```
+
+<p>可以看到，在执行stylelint成功以后，scss中的CSS属性排序发生了变化。</p>
+<img src="../../assets/images/38.png" alt="">
+
+
+- Stylelint 保存代码时自动检测
+
+<p>vscode 的 settings.json 配置内容如下:</p>
+
+```ts
+"editor.codeActionsOnSave": {
+  "source.fixAll.stylelint": "explicit", // 手动进行代码格式化之后执行的代码操作，使用stylelint修复代码，stylelint的配置中又包括了stylelint的规范和pretteir的规范。
+},
+```
 
 <style lang="scss" scoped>
 @import "@/assets/styles/common.scss";
