@@ -445,13 +445,11 @@ export default defineConfig({
         additionalData: `@use "@/styles/index.scss" as *;`,
       },
     },
-  }
-})
-
+  },
+});
 ```
 
 ![36](../../assets/images/36.png)
-
 
 ## Unocss 安装
 
@@ -926,10 +924,10 @@ li{
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: '/:pathMatch(.*)*',
-    component: () => import('@/views/error/notFound.vue'),
-  }
-]  
+    path: "/:pathMatch(.*)*",
+    component: () => import("@/views/error/notFound.vue"),
+  },
+];
 ```
 
 <p>vite.config.ts</p>
@@ -1084,7 +1082,7 @@ pnpm create @eslint/config@latest
 
 <img src="../../assets/images/35.png" alt="">
 
-- 解决Eslint 和 Prettier 的冲突
+- 解决 Eslint 和 Prettier 的冲突
 
 <p>为了解决这两种插件的代码规范冲突，需要安装额外的插件。但是在eslint@^8.0.0及其之后，不再需要安装这些插件了。eslint已经帮我们解决了这种冲突问题了，我们只需要在eslint.config.js增加配置就好了</p>
 
@@ -1093,11 +1091,11 @@ pnpm create @eslint/config@latest
 export default [
   {
     extends: [
-        // 其他扩展
-        'plugin:prettier/recommended', //该配置会自动禁用这些冲突规则，避免出现 ESLint 和 Prettier 同时对格式问题报错的情况。
+      // 其他扩展
+      "plugin:prettier/recommended", //该配置会自动禁用这些冲突规则，避免出现 ESLint 和 Prettier 同时对格式问题报错的情况。
     ],
   },
-]
+];
 ```
 
 - settings.json 添加一些格式化配置属性
@@ -1127,17 +1125,18 @@ pnpm install -D stylelint stylelint-config-standard stylelint-config-recommended
 
 <img src="../../assets/images/37.png" alt="">
 
-| 依赖                             | 说明                                                                 | 备注                                                                 |
-|----------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------|
-| `stylelint`                      | stylelint 核心库                                                     | [stylelint](https://stylelint.io)                                   |
-| `stylelint-config-standard`      | Stylelint 标准共享配置                                               | [stylelint-config-standard 文档](https://github.com/stylelint/stylelint-config-standard) |
-| `stylelint-config-recommended-scss` | 扩展 stylelint-config-recommended 共享配置并为 SCSS 配置其规则       | [stylelint-config-recommended-scss 文档](https://github.com/stylelint-scss/stylelint-config-recommended-scss) |
-| `stylelint-config-recommended-vue`  | 扩展 stylelint-config-recommended 共享配置并为 Vue 配置其规则        | [stylelint-config-recommended-vue 文档](https://github.com/ota-meshi/stylelint-config-recommended-vue) |
-| `stylelint-config-recess-order` | 提供优化的样式顺序的配置                                             | [CSS 书写顺序规范](https://github.com/stormwarning/stylelint-config-recess-order) |
-| `stylelint-config-html`         | 共享 HTML（类似 HTML）配置，捆绑 postcss-html 并对其进行配置         | [stylelint-config-html 文档](https://github.com/ota-meshi/stylelint-config-html) |
-| `postcss-html`                  | 解析 HTML（类似 HTML）的 PostCSS 语法                                | [postcss-html 文档](https://github.com/ota-meshi/postcss-html)     |
-| `postcss-scss`                  | PostCSS 的 SCSS 解析器，支持 CSS 行类注释                            | [postcss-scss 文档](https://github.com/postcss/postcss-scss)       |
-| `stylelint-prettier`            | 统一代码风格，格式冲突时以 Prettier 规则为准                          | [stylelint-prettier 文档](https://github.com/prettier/stylelint-prettier)
+| 依赖                                | 说明                                                           | 备注                                                                                                          |
+| ----------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `stylelint`                         | stylelint 核心库                                               | [stylelint](https://stylelint.io)                                                                             |
+| `stylelint-config-standard`         | Stylelint 标准共享配置                                         | [stylelint-config-standard 文档](https://github.com/stylelint/stylelint-config-standard)                      |
+| `stylelint-config-recommended-scss` | 扩展 stylelint-config-recommended 共享配置并为 SCSS 配置其规则 | [stylelint-config-recommended-scss 文档](https://github.com/stylelint-scss/stylelint-config-recommended-scss) |
+| `stylelint-config-recommended-vue`  | 扩展 stylelint-config-recommended 共享配置并为 Vue 配置其规则  | [stylelint-config-recommended-vue 文档](https://github.com/ota-meshi/stylelint-config-recommended-vue)        |
+| `stylelint-config-recess-order`     | 提供优化的样式顺序的配置                                       | [CSS 书写顺序规范](https://github.com/stormwarning/stylelint-config-recess-order)                             |
+| `stylelint-config-html`             | 共享 HTML（类似 HTML）配置，捆绑 postcss-html 并对其进行配置   | [stylelint-config-html 文档](https://github.com/ota-meshi/stylelint-config-html)                              |
+| `postcss-html`                      | 解析 HTML（类似 HTML）的 PostCSS 语法                          | [postcss-html 文档](https://github.com/ota-meshi/postcss-html)                                                |
+| `postcss-scss`                      | PostCSS 的 SCSS 解析器，支持 CSS 行类注释                      | [postcss-scss 文档](https://github.com/postcss/postcss-scss)                                                  |
+| `stylelint-prettier`                | 统一代码风格，格式冲突时以 Prettier 规则为准                   | [stylelint-prettier 文档](https://github.com/prettier/stylelint-prettier)                                     |
+
 <p>根目录新建 .stylelintrc.cjs 文件，配置如下：</p>
 
 ```ts
@@ -1212,7 +1211,6 @@ pnpm run lint:stylelint
 <p>可以看到，在执行stylelint成功以后，scss中的CSS属性排序发生了变化。</p>
 <img src="../../assets/images/38.png" alt="">
 
-
 - Stylelint 保存代码时自动检测
 
 <p>vscode 的 settings.json 配置内容如下:</p>
@@ -1221,6 +1219,287 @@ pnpm run lint:stylelint
 "editor.codeActionsOnSave": {
   "source.fixAll.stylelint": "explicit", // 手动进行代码格式化之后执行的代码操作，使用stylelint修复代码，stylelint的配置中又包括了stylelint的规范和pretteir的规范。
 },
+```
+
+## Git 提交规范-husky
+
+<p>超快的现代原生 git hooks，在提交或推送时自动检查您的提交消息、代码并运行测试。<a href="https://typicode.github.io/husky/">官方文档</a></p>
+
+<p>老规矩，我们先根据官方文档进行安装运行，如下图：</p>
+
+- 安装
+
+```ts
+pnpm add --save-dev husky
+```
+
+- 初始化
+
+```ts
+pnpm exec husky init
+```
+
+<p>初始化以后，我们发现，根目录里面多了一个.husky文件，如下图</p>
+
+<img src="../../assets/images/39.png" alt="">
+
+<p>可以看到有很多的git 钩子函数（pre-commit、commit-msg 等）用于触发</p>
+
+
+## Git 提交规范-Lint-staged
+
+<p>对暂存区（git add）的 文件运行格式化程序和 linters 等任务，搭配husky的 pre-commit 使得代码可以在提交commit的时候，触发pre-commit钩子函数，对暂存区的代码（git add）进行格式化、修复、检测等功能。<a href="https://github.com/lint-staged/lint-staged?tab=readme-ov-file">官方文档</a></p>
+
+- 安装
+
+```ts
+pnpm add -D lint-staged
+```
+
+- 配置
+
+<p>我们在 package.json 中配置 lint-staged 相关属性</p>
+
+```ts
+  "scripts": {
+    "lint:lint-staged": "lint-staged",
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix", // 修复代码规范问题
+      "prettier --write" //格式化代码并写入文件
+    ],
+    "*.{cjs,json}": [
+      "prettier --write"
+    ],
+    "*.{vue,html}": [
+      "eslint --fix",
+      "prettier --write",
+      "stylelint --fix" // 修复样式代码规范问题
+    ],
+    "*.{scss,css}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
+  },
+```
+
+- 在 .husky\pre-commit 中写入执行的脚本命令
+
+<p>pre-commit 钩子可以在提交commit之前触发，所以命令</p>
+
+```ts
+#pnpm test // 默认命令注释掉
+pnpm run lint:lint-staged
+```
+
+<p>然后提交代码进行测试</p>
+
+<img src="../../assets/images/40.png" alt="">
+
+
+## Commitlint
+
+<p>Commitlint是一种Git 提交 commit message 规范，有利于团队遵守提交约定。<a href="https://commitlint.js.org/#/?id=getting-started">官方文档</a></p>
+
+- Commitlint 安装
+
+```ts
+pnpm add --save-dev @commitlint/{cli,config-conventional}
+```
+
+- Commitlint 配置
+
+```ts
+echo "export default { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+```
+
+<p>运行命令以后，发现根目录多了一个 commitlint.config.js 文件，里面写入了我们的配置，然后我们对该配置添加一些属性</p>
+
+```ts
+/**
+* 配置参考官方文档：https://commitlint.js.org/reference/configuration.html
+**/
+
+const Configuration = {
+  // 继承的规则
+  extends: ["@commitlint/config-conventional"],
+  // 自定义规则
+  rules: {
+    // @see https://commitlint.js.org/#/reference-rules
+
+    // 提交类型枚举，git提交type必须是以下类型
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat", // 新增功能
+        "fix", // 修复缺陷
+        "docs", // 文档变更
+        "style", // 代码格式（不影响功能，例如空格、分号等格式修正）
+        "refactor", // 代码重构（不包括 bug 修复、功能新增）
+        "perf", // 性能优化
+        "test", // 添加疏漏测试或已有测试改动
+        "build", // 构建流程、外部依赖变更（如升级 npm 包、修改 webpack 配置等）
+        "ci", // 修改 CI 配置、脚本
+        "revert", // 回滚 commit
+        "chore", // 对构建过程或辅助工具和库的更改（不影响源文件、测试用例）
+        "wip", // 开发阶段临时提交
+      ],
+    ],
+    "subject-case": [0], // subject大小写不做校验
+  },
+
+  prompt: {
+    messages: {
+      type: "选择你要提交的类型 :",
+      scope: "选择一个提交范围（可选）:",
+      customScope: "请输入自定义的提交范围 :",
+      subject: "填写简短精炼的变更描述 :\n",
+      body: '填写更加详细的变更描述（可选）。使用 "|" 换行 :\n',
+      breaking: '列举非兼容性重大的变更（可选）。使用 "|" 换行 :\n',
+      footerPrefixesSelect: "选择关联issue前缀（可选）:",
+      customFooterPrefix: "输入自定义issue前缀 :",
+      footer: "列举关联issue (可选) 例如: #31, #I3244 :\n",
+      generatingByAI: "正在通过 AI 生成你的提交简短描述...",
+      generatedSelectByAI: "选择一个 AI 生成的简短描述:",
+      confirmCommit: "是否提交或修改commit ?",
+    },
+    // prettier-ignore
+    types: [
+      { value: "feat", name: "特性:     ✨  新增功能", emoji: ":sparkles:" },
+      { value: "fix", name: "修复:     🐛  修复缺陷", emoji: ":bug:" },
+      { value: "docs", name: "文档:     📝  文档变更(更新README文件，或者注释)", emoji: ":memo:" },
+      { value: "style", name: "格式:     🌈  代码格式（空格、格式化、缺失的分号等）", emoji: ":lipstick:" },
+      { value: "refactor", name: "重构:     🔄  代码重构（不修复错误也不添加特性的代码更改）", emoji: ":recycle:" },
+      { value: "perf", name: "性能:     🚀  性能优化", emoji: ":zap:" },
+      { value: "test", name: "测试:     🧪  添加疏漏测试或已有测试改动", emoji: ":white_check_mark:" },
+      { value: "build", name: "构建:     📦️  构建流程、外部依赖变更（如升级 npm 包、修改 vite 配置等）", emoji: ":package:" },
+      { value: "ci", name: "集成:     ⚙️   修改 CI 配置、脚本", emoji: ":ferris_wheel:" },
+      { value: "revert", name: "回退:     ↩️   回滚 commit", emoji: ":rewind:" },
+      { value: "chore", name: "其他:     🛠️   对构建过程或辅助工具和库的更改（不影响源文件、测试用例）", emoji: ":hammer:" },
+      { value: "wip", name: "开发中:   🚧  开发阶段临时提交", emoji: ":construction:" },
+    ],
+    useEmoji: true,
+    emojiAlign: "center",
+    useAI: false,
+    aiNumber: 1,
+    themeColorCode: "",
+    scopes: [],
+    allowCustomScopes: true,
+    allowEmptyScopes: true,
+    customScopesAlign: "bottom",
+    customScopesAlias: "custom",
+    emptyScopesAlias: "empty",
+    upperCaseSubject: false,
+    markBreakingChangeMode: false,
+    allowBreakingChanges: ["feat", "fix"],
+    breaklineNumber: 100,
+    breaklineChar: "|",
+    skipQuestions: [],
+    issuePrefixes: [{ value: "closed", name: "closed:   ISSUES has been processed" }],
+    customIssuePrefixAlign: "top",
+    emptyIssuePrefixAlias: "skip",
+    customIssuePrefixAlias: "custom",
+    allowCustomIssuePrefix: true,
+    allowEmptyIssuePrefix: true,
+    confirmColorize: true,
+    maxHeaderLength: Infinity,
+    maxSubjectLength: Infinity,
+    minSubjectLength: 0,
+    scopeOverrides: undefined,
+    defaultBody: "",
+    defaultIssues: "",
+    defaultScope: "",
+    defaultSubject: "",
+  },
+};
+
+export default Configuration;
+```
+
+- 设置一个 Git 的 commit-msg 钩子，在每次提交时自动执行 Commitlint 对提交信息进行校验
+
+<p>执行下列代码，运行husky的命令 在 .husky/commit-msg 文件中新增命令 "npx --no -- commitlint --edit \$1" </p>
+
+```ts
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+```
+
+<img src="../../assets/images/41.png" alt="">
+
+- 提交一条commit message，验证一下，发现有报错，是因为eslint版本自动升级导致的，但还是重新安装了相关插件，修改配置，如下图
+
+<p>报错：</p>
+
+<img src="../../assets/images/42.png" alt="">
+
+<p>安装插件，修改配置属性：</p>
+
+```ts
+pnpm add -D eslint-plugin-prettier eslint-config-prettier
+```
+
+```ts
+import prettierRecommended from 'eslint-plugin-prettier/recommended'
+export default [
+  prettierRecommended,
+  {
+    // 删除掉extends的用法，直接使用插件的形式引入（prettierRecommended）
+    // extends: [
+    //   // 其他扩展
+    //   'plugin:prettier/recommended',
+    // ],
+  },
+]
+```
+
+
+<p>然后再次提交commit，发现上个报错已解决，是因为我们提交的commit信息不规范。</p>
+
+<p>错误的提交：</p>
+
+```ts
+git add .
+git commit -m "test"
+```
+
+<img src="../../assets/images/43.png" alt="">
+
+<p>再使用正确的提交，发现提交通过了验证，可以正常提交</p>
+
+```ts
+git add .
+git commit -m "feat: 新增commitlint"
+```
+
+<img src="../../assets/images/44.png" alt="">
+
+<p class="bold">这里我发现页面上有些报错，可能是因为某些依赖自动升级造成的，所以我修改了eslint.config.js的配置内容，如下</p>
+
+```ts
+export default [
+  ...pluginVue.configs['flat/recommended'], //从基础配置改为推荐配置
+  {
+    rules: {
+      'vue/multi-word-component-names': 'off' //关闭eslint对vue的命名必须是多个单词的规则
+    }
+  },
+]
+```
+
+
+## Commitlint
+
+<p>Commitlint是一种Git 提交 commit message 规范，有利于团队遵守提交约定。<a href="https://commitlint.js.org/#/?id=getting-started">官方文档</a></p>
+
+- Commitlint 安装
+
+```ts
+pnpm add --save-dev @commitlint/{cli,config-conventional}
 ```
 
 <style lang="scss" scoped>
