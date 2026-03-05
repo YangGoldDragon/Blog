@@ -1492,16 +1492,259 @@ export default [
 ```
 
 
-## Commitlint
+## Commitizen & cz-git
 
-<p>Commitlint是一种Git 提交 commit message 规范，有利于团队遵守提交约定。<a href="https://commitlint.js.org/#/?id=getting-started">官方文档</a></p>
+<p>commitizen是一种基础的规范化Git提交工具，强制用户遵循「Conventional Commits」规范<a href="https://commitizen-tools.github.io/commitizen/">官方文档</a></p>
+<p>cz-git是专门为commitizen设计的高性能、高定制化适配器，是对默认适配器的 “升级替换”；<a href="https://commitizen-tools.github.io/commitizen/">官方文档</a></p>
 
-- Commitlint 安装
+- Commitizen & cz-git 安装
 
 ```ts
-pnpm add --save-dev @commitlint/{cli,config-conventional}
+pnpm add --save-dev commitlint cz-git
 ```
 
+<p>给commitizen添加cz-git配置</p>
+
+```json
+"config": {
+  "commitizen": {
+    "path": "node_modules/cz-git"
+  }
+}
+```
+
+<p>添加提交脚本命令</p>
+
+、、、json
+"scripts": {
+  "commit": "git-cz"
+},
+、、、
+
+<p>运行脚本命令，出现交换询问</p>
+
+、、、ts
+pnpm run commit
+、、、
+
+<p>至此，代码规范相关功能全部安装完毕。</p>
+
+
+## 国际化
+
+- Element Plus 国际化
+
+<p>Element Plus 提供了全局配置选项。<a href="https://element-plus.org/zh-CN/guide/i18n">官方文档</a></p>
+
+```ts
+// main.ts
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+
+app.use(ElementPlus, {
+  locale: zhCn,
+})
+```
+
+- ConfigProvider
+
+<p>Element Plus还提供一个 Vue 组件 ConfigProvider 用于全局配置本地化设置和其他设置。</p>
+
+```ts
+// main.ts
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+
+app.use(ElementPlus, {
+  locale: zhCn,
+})
+```
+
+<p>配置好插件以后，我们先使用注册一个store状态保存中英文，然后修改全局组件</p>
+
+```ts
+// src/store/app.ts
+import { useStorage } from '@vueuse/core'
+// 导入 Element Plus 中英文语言包
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
+
+// 语言类型枚举
+const enum LanguageEnum {
+  /**
+   * 中文
+   */
+  ZH_CN = 'zh-cn',
+
+  /**
+   * 英文
+   */
+  EN = 'en',
+}
+// 应用状态设置
+export const useAppStore = defineStore('app', () => {
+  // 语言类型设置
+  const language = useStorage('language', LanguageEnum.ZH_CN)
+
+  /**
+   * 根据语言标识读取对应的语言包
+   */
+  const locale = computed(() => {
+    if (language?.value == 'en') {
+      return en
+    } else {
+      return zhCn
+    }
+  })
+
+  /**
+   * 切换语言
+   */
+  function changeLanguage(val: string) {
+    language.value = val
+  }
+
+  return {
+    language,
+    locale,
+    changeLanguage,
+  }
+})
+```
+
+```ts
+// app.vue
+<script setup lang="ts">
+import { ElConfigProvider } from 'element-plus'
+import { useAppStore } from '@/store/app'
+const appStore = useAppStore()
+</script>
+
+<template>
+  <ElConfigProvider :locale="appStore.locale">
+    <router-view />
+  </ElConfigProvider>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+<p>如下图：切换英文成功</p>
+
+![2](../../assets/images/45.png)
+
+- vue-i18n 国际化
+
+<p>Vue 专属的国际化插件，帮你快速实现多语言切换</p>
+
+<p>安装</p>
+
+```ts
+pnpm add vue-i18n@11
+```
+
+<p>然后是代码从上到下，依次分装如下：</p>
+
+```ts
+// src/main.ts
+import setupI18n from '@/utils/lang'
+const app = createApp(App)
+setupI18n(app)
+```
+
+```ts
+// @/utils/lang
+import { createI18n } from 'vue-i18n'
+import type { App } from 'vue'
+import { useAppStoreHook } from '@/store/app'
+
+const zhCnLang = {
+  message: {
+    hello: '你好，世界！',
+  },
+}
+
+const enLang = {
+  message: {
+    hello: 'Hello, world!',
+  },
+}
+
+const messages = {
+  'zh-cn': zhCnLang,
+  en: enLang,
+}
+
+const useAppStore = useAppStoreHook()
+
+export function setupI18n(app: App<Element>) {
+  // 在 app 安装后，动态设置语言
+  const i18n = createI18n({
+    legacy: false,
+    locale: useAppStore.language,
+    messages: messages,
+  })
+  app.use(i18n)
+}
+export default setupI18n
+```
+
+```ts
+// store/app.ts
+
+import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
+// 导入 Element Plus 中英文语言包
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
+import { store } from './index'
+
+// 语言类型枚举
+const Language = {
+  /**
+   * 中文
+   */
+  ZH_CN: 'zh-cn',
+
+  /**
+   * 英文
+   */
+  EN: 'en',
+}
+// 应用状态设置
+export const useAppStore = defineStore('app', () => {
+  // 语言类型设置
+  const language = useStorage('language', Language.ZH_CN)
+
+  /**
+   * 根据语言标识读取对应的语言包
+   */
+  const locale = computed(() => {
+    if (language?.value == 'en') {
+      return en
+    } else {
+      return zhCn
+    }
+  })
+
+  /**
+   * 切换语言
+   */
+  function changeLanguage(val: string | undefined) {
+    language.value = val
+  }
+
+  return {
+    language,
+    locale,
+    changeLanguage,
+  }
+})
+
+export function useAppStoreHook() {
+  return useAppStore(store)
+}
+````
 <style lang="scss" scoped>
 @import "@/assets/styles/common.scss";
 </style>
