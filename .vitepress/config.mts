@@ -18,7 +18,7 @@ export default defineConfig({
       {
         text: '基础知识',
         items: [
-          { text: 'Typescript', link: '/basicKnowledge/typescript' },
+          { text: 'Javascript', link: '/basicKnowledge/javascript' },
         ]
       },
       {
@@ -41,7 +41,7 @@ export default defineConfig({
   // },
   rewrites: {
     'views/practicalProjects/admin.md': 'practicalProjects/admin.md',
-    'views/basicKnowledge/typescript.md': 'basicKnowledge/typescript.md',
+    'views/basicKnowledge/javascript.md': 'basicKnowledge/javascript.md',
   },
   vite: viteConfig
 })
